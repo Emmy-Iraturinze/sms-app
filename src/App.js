@@ -1,73 +1,30 @@
 import React, { useState, useEffect } from 'react';
 
 
+const axios = require('axios').default;
 
+const newPost = {
+  'client_id': 'amily-inc',
+ 'grant_type': 'client_credentials',
+ 'client_secret': 'be5b11c7-5831-4919-bebf-1729344a725d',
+};
 
-import Keycloak from 'keycloak-js';
+const sendPostRequest = async () => {
+    try {
+        const resp = await axios.post('https://auth.oltranz.com/auth/realms/api/protocol/openid-connect/token', newPost,{
 
-
-
-const App = (props) => {
-
-
-    const [keycloak, setKeycloak] = useState(null);
-  	const [authenticated, setAuthenticated] = useState(false);
-
-
-
-	 
-    useEffect(() => { 
-
-   
-        
-
-    const keycloak = new Keycloak({
-        url: process.env.REACT_APP_KEYCLOAK_URL,
-        realm: process.env.REACT_APP_KEYCLOAK_REALM,
-        clientId : process.env.REACT_APP_KEYCLOAK_CLIENT_ID
-    });
-    keycloak.init({ onLoad: 'login-required' }).then(
-        Authenticated => {
-        setKeycloak(keycloak);
-        setAuthenticated(Authenticated)  
-     
+          headers: {
+      
+            'content-type': 'application/x-www-form-urlencoded'
+          }
+        });
+        console.log(resp.data);
+    } catch (err) {
+        // Handle Error Here
+        console.error(err);
     }
-    );
-    },[]);
-    
+};
 
+sendPostRequest();
 
-
-    if(keycloak) {
-            if(authenticated){
-
-                // This is the method to update access token.                
-                keycloak.updateToken(300).then(function(refreshed) {
-                        if (refreshed) {
-                           // console.log('Token was successfully refreshed')  
-                        } else {
-                           console.log('Token is still valid');
-                        }
-                    }).catch(function() {
-                        keycloak.logout();
-                        //console.log('Failed to refresh token or the session has expired');
-                    });
-
-                return (    
-                            
-                            <div>
-                <h3>Congratulations, Now you have a valid token. Go ahead and refer to this code sample to create your own sms app</h3>
-                        </div>
-                    );
-        }else
-            return (
-            <div>404 Authorization failed</div>
-            );  
-    }else{
-        return (
-            <div>initialization...</div>
-          );
-    }
-}
-
-export default App;
+export default sendPostRequest;

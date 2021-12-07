@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
+import sendPostRequest, { asyncFunc } from './App';
 import './index.css';
-import App from './App';
+
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+  <sendPostRequest/>
   </React.StrictMode>,
   document.getElementById('root')
 );
